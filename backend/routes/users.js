@@ -1,7 +1,13 @@
 const router = require("express").Router();
+const User = require("../models/user")
+const bcrypt = require("bcrypt")
 
-router.get("/", (req, res) => {
-  res.send("Hey its user routes");
-});
+
+//update user
+//follow a user 
+//un follow a user 
+
+
 
 module.exports = router;
+ 

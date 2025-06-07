@@ -56,28 +56,42 @@ router.get("/:id", async (req,res) => {
   }
 })
 
-//follow a user 
-router.put("/:id/follow", async (req,res)=>{
-  if(req.body.userId !== req.params.id){
-    try{
-      const user = await User.findById(req.params.id);
-      const currentUser = await User.findById(req.body.userId);
-      if(!user.followers.includes(req.body.userId)){
-        await user.updateOne({$push: {followers: req.body.userId}});
-        await currentUser.updateOne({$push: {followings:req.params.id}});
-        res.status(200).json("user has been followed")
 
-      }else{
-        res.status(403).json("you already follow this user")
+// Route to follow a user
+router.put("/:id/follow", async (req, res) => {
+  // Check if the user is not trying to follow themselves
+  if (req.body.userId !== req.params.id) {
+    try {
+      // Find the user who is going to be followed
+      const user = await User.findById(req.params.id); //param = user who is to be follow
+
+      // Find the user who wants to follow
+      const currentUser = await User.findById(req.body.userId); // body = the curent user (you)
+
+      // Check if the currentUser is not already following the user
+      if (!user.followers.includes(req.body.userId)) {
+        // Add currentUser to the user's followers list
+        await user.updateOne({ $push: { followers: req.body.userId } });
+
+        // Add user to the currentUser's followings list
+        await currentUser.updateOne({ $push: { followings: req.params.id } });
+
+        // Send success response
+        res.status(200).json("user has been followed");
+      } else {
+        // Send error if already following
+        res.status(403).json("you already follow this user");
       }
-
-    }catch(err){
-      res.status(500).json(err)
+    } catch (err) {
+      // Send server error if anything fails
+      res.status(500).json(err);
     }
-  }else{
-    res.status(403).json("You cnat follow yourself")
+  } else {
+    // Error if user tries to follow themselves
+    res.status(403).json("You can't follow yourself");
   }
-})
+});
+
 
 //unfollow a user 
 router.put("/:id/unfollow", async (req,res)=>{

@@ -1,7 +1,9 @@
-export default function App() {
+import Navbar from "./components/navbar";
+
+function App() {
   return (
-    <h1 className="text-xl  underline">
-      Hello world!
-    </h1>
-  )
+    <Navbar/>
+  );
 }
+
+export default App;

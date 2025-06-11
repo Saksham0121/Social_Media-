@@ -1,9 +1,13 @@
 import Navbar from "./components/navbar";
-
-function App() {
+import Homepage from "./pages/Homepage";
+const App = () => {
   return (
-    <Navbar/>
+
+    <div className="App">
+      <Navbar/>
+      <Homepage />
+    </div>
   );
-}
+};
 
 export default App;

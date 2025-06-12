@@ -3,8 +3,6 @@ const User = require("../models/user");
 const bcrypt = require("bcrypt")
 // Register (GET /api/auth/register)
 router.post("/register", async (req, res) => {
-
-
   try {
     //gerneate new password
     const salt = await bcrypt.genSalt(10)

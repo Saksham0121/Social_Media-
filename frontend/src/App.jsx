@@ -1,13 +1,14 @@
-import Navbar from "./components/navbar";
-import Homepage from "./pages/Homepage";
-const App = () => {
-  return (
+import React from 'react';
+import Navbar from './components/navbar';
+import Homepage from './pages/Homepage';
 
+function App() {
+  return (
     <div className="App">
-      <Navbar/>
+      <Navbar />
       <Homepage />
     </div>
   );
-};
+}
 
 export default App;

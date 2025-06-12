@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Search, Home, User, MessageCircle, Bell, Settings } from 'lucide-react';
+import { Search, Home, User, MessageCircle, Bell } from 'lucide-react';
 
 export default function Navbar() {
   const [searchQuery, setSearchQuery] = useState('');
@@ -14,27 +14,24 @@ export default function Navbar() {
   const handleSearch = (e) => {
     e.preventDefault();
     console.log('Searching for:', searchQuery);
-    // Add your search logic here
   };
 
   return (
-    <nav className="bg-slate-900 border-b border-slate-700 px-6 py-3">
+    <nav className="fixed top-0 left-0 right-0 bg-[#000000] border-b border-[#222222] px-6 py-3 z-50">
       <div className="flex items-center justify-between max-w mx-auto">
         {/* Logo/Brand */}
-        <div className="flex items-center space-x-2">
-          <div className="w-8 h-8 bg-blue-500 rounded-lg flex items-center justify-center font-bold text-white text-lg">
-            N
+        <div className="flex items-center space-x-1">
+          <div className="w-10 h-10 rounded-lg flex items-center justify-center font-bold text-black text-lg">
+            <img src = "/src/assets/ConnectNow.png"></img>
           </div>
-          <span className="text-white font-semibold text-xl">YapYap</span>
+          <span className="text-white font-semibold text-xl">ConnectNow</span>
         </div>
 
         {/* Search Bar */}
         <div className="flex-1 max-w-md mx-8">
           <div className="relative">
-            <div className={`relative transition-all duration-200 ${
-              isSearchFocused ? 'transform scale-105' : ''
-            }`}>
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-400 w-4 h-4" />
+            <div className={`relative transition-all duration-200 ${isSearchFocused ? 'transform scale-105' : ''}`}>
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-[#169976] w-4 h-4" />
               <input
                 type="text"
                 placeholder="Search the neural network..."
@@ -43,10 +40,10 @@ export default function Navbar() {
                 onFocus={() => setIsSearchFocused(true)}
                 onBlur={() => setIsSearchFocused(false)}
                 onKeyPress={(e) => e.key === 'Enter' && handleSearch(e)}
-                className={`w-full pl-10 pr-4 py-2 bg-slate-800 border rounded-full text-white placeholder-slate-400 focus:outline-none transition-all duration-200 ${
-                  isSearchFocused 
-                    ? 'border-blue-500 bg-slate-700 shadow-lg shadow-blue-500/20' 
-                    : 'border-slate-600 hover:border-slate-500'
+                className={`w-full pl-10 pr-4 py-2 bg-[#222222] border rounded-full text-white placeholder-[#1DCD9F] focus:outline-none transition-all duration-200 ${
+                  isSearchFocused
+                    ? 'border-[#1DCD9F] bg-[#222222] shadow-lg shadow-[#1DCD9F]/20'
+                    : 'border-[#169976] hover:border-[#1DCD9F]'
                 }`}
               />
             </div>
@@ -56,17 +53,17 @@ export default function Navbar() {
         {/* Navigation Icons */}
         <div className="flex items-center space-x-5">
           {/* Home */}
-          <button className="p-2 text-slate-400 hover:text-white hover:bg-slate-800 rounded-lg transition-all duration-200">
+          <button className="p-2 text-[#1DCD9F] hover:text-white hover:bg-[#222222] rounded-lg transition-all duration-200">
             <Home className="w-5 h-5" />
           </button>
 
           {/* Profile */}
-          <button className="p-2 text-slate-400 hover:text-white hover:bg-slate-800 rounded-lg transition-all duration-200">
+          <button className="p-2 text-[#1DCD9F] hover:text-white hover:bg-[#222222] rounded-lg transition-all duration-200">
             <User className="w-5 h-5" />
           </button>
 
-          {/* Messages with notification */}
-          <button className="relative p-2 text-slate-400 hover:text-white hover:bg-slate-800 rounded-lg transition-all duration-200 group">
+          {/* Messages */}
+          <button className="relative p-2 text-[#1DCD9F] hover:text-white hover:bg-[#222222] rounded-lg transition-all duration-200 group">
             <MessageCircle className="w-5 h-5" />
             {notifications.messages > 0 && (
               <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center font-medium animate-pulse">
@@ -76,7 +73,7 @@ export default function Navbar() {
           </button>
 
           {/* Notifications */}
-          <button className="relative p-2 text-slate-400 hover:text-white hover:bg-slate-800 rounded-lg transition-all duration-200 group">
+          <button className="relative p-2 text-[#1DCD9F] hover:text-white hover:bg-[#222222] rounded-lg transition-all duration-200 group">
             <Bell className="w-5 h-5" />
             {notifications.notifications > 0 && (
               <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center font-medium animate-pulse">
@@ -85,32 +82,22 @@ export default function Navbar() {
             )}
           </button>
 
-          {/* Updates */}
-          {/* <button className="relative p-2 text-slate-400 hover:text-white hover:bg-slate-800 rounded-lg transition-all duration-200 group">
-            <Settings className="w-5 h-5" />
-            {notifications.updates > 0 && (
-              <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center font-medium animate-pulse">
-                {notifications.updates}
-              </span>
-            )}
-          </button> */}
-
           {/* User Avatar */}
           <div className="ml-3">
-            <button className="w-8 h-8 bg-gradient-to-r from-blue-400 to-purple-500 rounded-full flex items-center justify-center hover:shadow-lg hover:shadow-blue-500/25 transition-all duration-200 transform hover:scale-110">
-              <span className="text-white font-medium text-sm">A</span>
+            <button className="w-8 h-8 rounded-full flex items-center justify-center bg-[#222222] hover:shadow-lg hover:shadow-[#1DCD9F]/25 transition-all duration-200 transform hover:scale-110 overflow-hidden relative">
+              <img src="/src/assets/ZenitsuDS.jpg" alt="icon" className="w-full h-full object-cover absolute inset-0" />
             </button>
           </div>
         </div>
       </div>
 
-      {/* Mobile Menu Button (hidden on desktop) */}
+      {/* Mobile Menu Button (Optional) */}
       <div className="md:hidden mt-3">
-        <button className="w-full text-left text-slate-400 hover:text-white transition-colors duration-200">
+        <button className="w-full text-left text-[#1DCD9F] hover:text-white transition-colors duration-200">
           <div className="flex items-center space-x-2">
-            <div className="w-6 h-0.5 bg-slate-600"></div>
-            <div className="w-4 h-0.5 bg-slate-600"></div>
-            <div className="w-5 h-0.5 bg-slate-600"></div>
+            <div className="w-6 h-0.5 bg-[#1DCD9F]"></div>
+            <div className="w-4 h-0.5 bg-[#1DCD9F]"></div>
+            <div className="w-5 h-0.5 bg-[#1DCD9F]"></div>
           </div>
         </button>
       </div>

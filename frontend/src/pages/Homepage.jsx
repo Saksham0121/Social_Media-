@@ -1,6 +1,7 @@
 import React from 'react';
 import Sidebar from '../components/Sidebar';
 import Feed from '../components/feed';
+import Rightbar from '../components/Rightbar';
 
 const Homepage = () => {
   return (
@@ -8,6 +9,7 @@ const Homepage = () => {
       <div className="homepage-container" style={{ backgroundColor: '#1A1A1A' }}>
         <Sidebar />
         <Feed />
+        <Rightbar/>
       </div>
     </div>
   );

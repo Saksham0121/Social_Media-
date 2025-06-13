@@ -65,7 +65,7 @@ const Feed = () => {
   ];
 
   return (
-    <div className="flex-1 ml-80 mr-80 pt-20 px-4">
+    <div className="flex-1 ml-80 mr-80 pt-20 px-4 ">
       <div className="max-w-2xl mx-auto">
         {/* Share Component */}
         <Share />

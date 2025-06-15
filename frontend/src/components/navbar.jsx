@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { Link } from "react-router-dom";
 import { Search, Home, User, MessageCircle, Bell } from 'lucide-react';
 
 export default function Navbar() {
@@ -20,12 +21,12 @@ export default function Navbar() {
     <nav className="fixed top-0 left-0 right-0 bg-[#000000] border-b border-[#222222] px-6 py-3 z-50">
       <div className="flex items-center justify-between max-w mx-auto">
         {/* Logo/Brand */}
-        <div className="flex items-center space-x-1">
+        <Link to="/" className="flex items-center space-x-1">
           <div className="w-10 h-10 rounded-lg flex items-center justify-center font-bold text-black text-lg">
             <img src = "/src/assets/ConnectNow.png"></img>
           </div>
           <span className="text-white font-semibold text-xl">ConnectNow</span>
-        </div>
+        </Link>
 
         {/* Search Bar */}
         <div className="flex-1 max-w-md mx-8">
@@ -53,14 +54,15 @@ export default function Navbar() {
         {/* Navigation Icons */}
         <div className="flex items-center space-x-5">
           {/* Home */}
-          <button className="p-2 text-[#1DCD9F] hover:text-white hover:bg-[#222222] rounded-lg transition-all duration-200">
+          <Link to="/" className="p-2 text-[#1DCD9F] hover:text-white hover:bg-[#222222] rounded-lg transition-all duration-200">
             <Home className="w-5 h-5" />
-          </button>
+          </Link>
 
-          {/* Profile */}
-          <button className="p-2 text-[#1DCD9F] hover:text-white hover:bg-[#222222] rounded-lg transition-all duration-200">
-            <User className="w-5 h-5" />
-          </button>
+          <Link to="/profile">
+            <button className="p-2 text-[#1DCD9F] hover:text-white hover:bg-[#222222] rounded-lg transition-all duration-200">
+              <User className="w-5 h-5" />
+            </button>
+          </Link>
 
           {/* Messages */}
           <button className="relative p-2 text-[#1DCD9F] hover:text-white hover:bg-[#222222] rounded-lg transition-all duration-200 group">

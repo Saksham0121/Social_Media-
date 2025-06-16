@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Home, MessageCircle, Video, Users, Bookmark, Hash, Briefcase, Calendar, GraduationCap, Camera, Edit3, MapPin, Heart, Share, MoreHorizontal, UserPlus, Settings } from 'lucide-react';
 import Sidebar from '../components/Sidebar';
+import Navbar from '../components/navbar';
 
 const ProfilePage = () => {
   const [activeTab, setActiveTab] = useState('posts');
@@ -55,6 +56,7 @@ const ProfilePage = () => {
 
   return (
     <div className="min-h-screen bg-[#0A0A0A] text-white">
+      <Navbar />
       <Sidebar />
       
       {/* Main Content */}
@@ -110,22 +112,6 @@ const ProfilePage = () => {
               <br />
               Building amazing digital experiences one line of code at a time ✨
             </p>
-
-            {/* Profile Stats */}
-            <div className="flex items-center space-x-6 mt-4 text-sm">
-              <div className="flex items-center space-x-1 text-[#AAAAAA]">
-                <MapPin className="w-4 h-4" />
-                <span>New York, NY</span>
-              </div>
-              <div className="flex items-center space-x-1 text-[#AAAAAA]">
-                <Briefcase className="w-4 h-4" />
-                <span>Tech Lead at StartupCo</span>
-              </div>
-              <div className="flex items-center space-x-1 text-[#AAAAAA]">
-                <Calendar className="w-4 h-4" />
-                <span>Joined March 2020</span>
-              </div>
-            </div>
 
             {/* Follow Stats */}
             <div className="flex items-center space-x-8 mt-6">
@@ -261,33 +247,6 @@ const ProfilePage = () => {
                   I love working with modern technologies like React, Node.js, and cloud platforms. When I'm not coding, 
                   you can find me hiking, reading tech blogs, or experimenting with new frameworks.
                 </p>
-              </div>
-
-              <div className="bg-[#111111] rounded-lg p-6 border border-[#222222]">
-                <h3 className="text-xl font-semibold mb-4">Work Experience</h3>
-                <div className="space-y-4">
-                  <div>
-                    <h4 className="font-semibold">Tech Lead</h4>
-                    <p className="text-[#1DCD9F]">StartupCo</p>
-                    <p className="text-[#AAAAAA] text-sm">2022 - Present</p>
-                  </div>
-                  <div>
-                    <h4 className="font-semibold">Senior Frontend Developer</h4>
-                    <p className="text-[#1DCD9F]">TechCorp</p>
-                    <p className="text-[#AAAAAA] text-sm">2020 - 2022</p>
-                  </div>
-                </div>
-              </div>
-
-              <div className="bg-[#111111] rounded-lg p-6 border border-[#222222]">
-                <h3 className="text-xl font-semibold mb-4">Skills</h3>
-                <div className="flex flex-wrap gap-2">
-                  {['JavaScript', 'React', 'Node.js', 'TypeScript', 'Python', 'AWS', 'Docker', 'MongoDB'].map((skill) => (
-                    <span key={skill} className="bg-[#1DCD9F]/10 text-[#1DCD9F] px-3 py-1 rounded-full text-sm">
-                      {skill}
-                    </span>
-                  ))}
-                </div>
               </div>
             </div>
           )}

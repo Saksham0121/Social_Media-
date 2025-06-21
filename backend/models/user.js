@@ -4,9 +4,9 @@ const UserSchema = new mongoose.Schema(
   {
     username: {
       type: String,
-      required: true,        // ✅ corrected 'require' → 'required'
-      minLength: 3,          // ✅ replaced 'min' → 'minLength'
-      maxLength: 20,         // ✅ replaced 'max' → 'maxLength'
+      required: true,  
+      minLength: 3,
+      maxLength: 20,  
       unique: true
     },
     email: {
@@ -18,7 +18,7 @@ const UserSchema = new mongoose.Schema(
     password: {
       type: String,
       required: true,
-      minLength: 6           // ✅ replaced 'min' → 'minLength'
+      minLength: 6 
     },
     profilePicture: {
       type: String,
@@ -29,7 +29,7 @@ const UserSchema = new mongoose.Schema(
       default: ""
     },
     followers: {
-      type: [String],        // ✅ more explicit than Array
+      type: [String], 
       default: []
     },
     followings: {

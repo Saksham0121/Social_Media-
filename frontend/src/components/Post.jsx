@@ -1,21 +1,52 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Heart, MessageCircle, Share, MoreHorizontal } from 'lucide-react';
+import { format } from 'timeago.js';
+import axios from 'axios';
+import john from "/public/assets/john.png"
 
-const Post = ({ user, handle, time, content, image, likes, comments, shares }) => {
-  const [liked, setLiked] = useState(false);
-  const [likeCount, setLikeCount] = useState(likes);
+
+const Post = ({ post }) => {
+  if (!post) return null;
+
+  const [user, setUser] = useState({});
+  const [like, setLike] = useState(post?.likes?.length || 0);
+  const [isLiked, setIsLiked] = useState(false);
   const [showComments, setShowComments] = useState(false);
+  const PF = import.meta.env.VITE_PUBLIC_FOLDER;
 
-  const handleLike = () => {
-    setLiked(!liked);
-    setLikeCount(liked ? likeCount - 1 : likeCount + 1);
+  useEffect(() => {
+    const fetchUser = async () => {
+      try {
+        const res = await axios.get(`http://localhost:8800/api/users/${post.userId}`);
+        // const res = await axios.get(`/users/id=${post.userId}`);
+        // const res = await axios.get(`http://localhost:8800/api/users/id`);
+
+        
+        console.log(res.data)
+
+        setUser(res.data);
+      } catch (err) {
+        console.error(err);
+      }
+    };
+    if (post?.userId) fetchUser();
+  }, [post?.userId]);
+
+  const likeHandler = async () => {
+    try {
+      await axios.put(`/posts/${post._id}/like`, { userId: post.userId });
+    } catch (err) {
+      console.error(err);
+    }
+    setLike(isLiked ? like - 1 : like + 1);
+    setIsLiked(!isLiked);
   };
 
   const handleShare = () => {
     if (navigator.share) {
       navigator.share({
-        title: `Post by ${user}`,
-        text: content,
+        title: `Post by ${user.username}`,
+        text: post.desc,
         url: window.location.href,
       });
     } else {
@@ -24,17 +55,30 @@ const Post = ({ user, handle, time, content, image, likes, comments, shares }) =
     }
   };
 
+  // Handle image error by setting a fallback
+  const handleImageError = (e) => {
+    e.target.src = '/assets/default-avatar.jpg'; // Path to default image in public folder
+  };
+
   return (
     <div className="bg-[#111111] rounded-lg shadow-sm border border-[#222222] mb-4 text-white">
-      {/* Post Header */}
+      {/* Header */}
       <div className="flex items-start justify-between p-4">
         <div className="flex items-center space-x-3">
-          <div className="w-12 h-12 bg-gradient-to-r from-[#1DCD9F] to-[#169976] rounded-full flex items-center justify-center">
-            <span className="text-white font-semibold text-lg">{user.charAt(0)}</span>
-          </div>
+          <img
+            src={
+              user.profilePicture
+                ? PF + user.profilePicture
+                : '/assets/defaultpfp.png' // Direct path to public folder
+            }
+            alt=""
+            className="w-12 h-12 rounded-full object-cover"
+            onError={handleImageError} // Fallback for broken images
+          />
           <div>
-            <h3 className="font-semibold text-white">{user}</h3>
-            <p className="text-gray-400 text-sm">@{handle} · {time}</p>
+            <h3 className="font-semibold text-white">{user?.username }</h3>
+            <p className="text-gray-400 text-sm">@{user?.username || "user"} · {format(post.createdAt)}</p>
+
           </div>
         </div>
         <button className="p-2 rounded-full hover:bg-[#1DCD9F]/10 transition-colors">
@@ -42,51 +86,52 @@ const Post = ({ user, handle, time, content, image, likes, comments, shares }) =
         </button>
       </div>
 
-      {/* Post Content */}
+      {/* Content */}
       <div className="px-4 pb-3">
-        <p className="text-gray-200 text-base leading-relaxed mb-3">{content}</p>
-        {image && (
+        <p className="text-gray-200 text-base leading-relaxed mb-3">{post.desc}</p>
+        {post.img && (
           <div className="rounded-lg overflow-hidden">
-            <img src={image} alt="Post content" className="w-full h-64 object-cover" />
+            <img src={`/assets/${post.img}`} alt="Post" className="w-full h-64 object-cover" />
           </div>
         )}
       </div>
 
-      {/* Post Actions */}
+      {/* Actions */}
       <div className="flex items-center justify-between px-4 py-3 border-t border-[#222222]">
-        <button 
-          onClick={handleLike}
+        <button
+          onClick={likeHandler}
           className={`flex items-center space-x-2 px-3 py-2 rounded-full transition-colors ${
-            liked 
-              ? 'text-[#1DCD9F] hover:bg-[#1DCD9F]/10' 
+            isLiked
+              ? 'text-[#1DCD9F] hover:bg-[#1DCD9F]/10'
               : 'text-gray-400 hover:bg-white/5'
           }`}
         >
-          <Heart className={`w-5 h-5 ${liked ? 'fill-current' : ''}`} />
-          <span className="text-sm font-medium">{likeCount}</span>
+          <Heart className={`w-5 h-5 ${isLiked ? 'fill-current' : ''}`} />
+          <span className="text-sm font-medium">{like}</span>
         </button>
-        
-        <button 
+
+        <button
           onClick={() => setShowComments(!showComments)}
           className="flex items-center space-x-2 px-3 py-2 rounded-full text-gray-400 hover:bg-white/5 transition-colors"
         >
           <MessageCircle className="w-5 h-5" />
-          <span className="text-sm font-medium">{comments}</span>
+          <span className="text-sm font-medium">{post.comment} comments</span>
         </button>
-        
-        <button 
+
+        <button
           onClick={handleShare}
           className="flex items-center space-x-2 px-3 py-2 rounded-full text-gray-400 hover:bg-white/5 transition-colors"
         >
           <Share className="w-5 h-5" />
-          <span className="text-sm font-medium">{shares}</span>
+          <span className="text-sm font-medium">{post.shares || 0}</span>
         </button>
       </div>
 
-      {/* Comments Section */}
+      {/* Comments */}
       {showComments && (
-        <div className="px-4 pb-4 border-t border-[#222222]">
+        <div className="px-4 pb-4 border-t border-[#222222] mt-2">
           <div className="mt-4 space-y-3">
+            {/* Static comment preview */}
             <div className="flex space-x-3">
               <div className="w-8 h-8 bg-gradient-to-r from-[#1DCD9F] to-[#169976] rounded-full flex items-center justify-center">
                 <span className="text-white font-semibold text-sm">J</span>
@@ -94,7 +139,7 @@ const Post = ({ user, handle, time, content, image, likes, comments, shares }) =
               <div className="flex-1">
                 <div className="bg-[#222222] rounded-lg px-3 py-2">
                   <p className="text-sm font-medium text-white">John Doe</p>
-                  <p className="text-sm text-gray-300">Great post! Thanks for sharing.</p>
+                  <p className="text-sm text-gray-300">Awesome post!</p>
                 </div>
                 <p className="text-xs text-gray-500 mt-1">2m ago</p>
               </div>

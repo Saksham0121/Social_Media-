@@ -1,40 +1,28 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Home, MessageCircle, Video, Users, Bookmark, Hash, Briefcase, Calendar, GraduationCap, Camera, Edit3, MapPin, Heart, Share, MoreHorizontal, UserPlus, Settings } from 'lucide-react';
 import Sidebar from '../components/Sidebar';
 import Navbar from '../components/navbar';
+import Feed from '../components/Feed';
+import axios from 'axios';
 
 const ProfilePage = () => {
   const [activeTab, setActiveTab] = useState('posts');
+  const [user, setUser] = useState({});
   const [isFollowing, setIsFollowing] = useState(false);
 
-  const posts = [
-    {
-      id: 1,
-      content: "Just finished an amazing hiking trip in the mountains! The view was absolutely breathtaking. Nature always has a way of putting things into perspective. 🏔️",
-      image: "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=500&h=400&fit=crop",
-      likes: 124,
-      comments: 23,
-      shares: 8,
-      time: "2 hours ago"
-    },
-    {
-      id: 2,
-      content: "Working on a new project that I'm really excited about. Can't wait to share more details soon! The creative process has been incredibly rewarding.",
-      likes: 89,
-      comments: 15,
-      shares: 5,
-      time: "1 day ago"
-    },
-    {
-      id: 3,
-      content: "Beautiful sunset from my balcony today. Sometimes the best moments are the ones right at home. 🌅",
-      image: "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=500&h=400&fit=crop",
-      likes: 156,
-      comments: 31,
-      shares: 12,
-      time: "3 days ago"
-    }
-  ];
+  
+    useEffect(() => {
+      const fetchUser = async () => {
+        try {
+          const res = await axios.get(`http://localhost:8800/api/users?username=rolex`);
+          console.log(res.data)
+          setUser(res.data);
+        } catch (err) {
+          console.error(err);
+        }
+      };
+      fetchUser();
+    }, []);
 
   const photos = [
     "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=300&h=300&fit=crop",
@@ -104,15 +92,9 @@ const ProfilePage = () => {
 
           {/* Profile Details */}
           <div className="mt-16 ml-44">
-            <h1 className="text-3xl font-bold">Zenitsu Agatsuma</h1>
-            <p className="text-[#AAAAAA] text-lg">@zeniiizeni</p>
-            
-            <p className="mt-4 text-lg max-w-2xl">
-              Warrior | Soon Hashira | Lightening God
-              <br />
-              Building amazing digital experiences one line of code at a time ✨
-            </p>
-
+            <h1 className="text-3xl font-bold">{user.username}</h1>
+            <p className="text-[#ffffff] text-lg">{user.desc}</p>
+          
             {/* Follow Stats */}
             <div className="flex items-center space-x-8 mt-6">
               <div className="text-center">
@@ -157,51 +139,7 @@ const ProfilePage = () => {
         {/* Tab Content */}
         <div className="px-8 py-6">
           {activeTab === 'posts' && (
-            <div className="max-w-2xl space-y-6">
-              {posts.map((post) => (
-                <div key={post.id} className="bg-[#111111] rounded-lg p-6 border border-[#222222]">
-                  <div className="flex items-center justify-between mb-4">
-                    <div className="flex items-center space-x-3">
-                      <div className="w-10 h-10 rounded-full bg-gradient-to-br from-blue-500 to-teal-500 flex items-center justify-center font-bold">
-                        SK
-                      </div>
-                      <div>
-                        <h3 className="font-semibold">Safak Kocaoglu</h3>
-                        <p className="text-[#AAAAAA] text-sm">{post.time}</p>
-                      </div>
-                    </div>
-                    <button className="text-[#AAAAAA] hover:text-white transition-colors">
-                      <MoreHorizontal className="w-5 h-5" />
-                    </button>
-                  </div>
-                  
-                  <p className="mb-4 leading-relaxed">{post.content}</p>
-                  
-                  {post.image && (
-                    <img 
-                      src={post.image} 
-                      alt="Post content"
-                      className="w-full rounded-lg mb-4 max-h-96 object-cover"
-                    />
-                  )}
-                  
-                  <div className="flex items-center justify-between pt-4 border-t border-[#222222]">
-                    <button className="flex items-center space-x-2 text-[#AAAAAA] hover:text-red-500 transition-colors">
-                      <Heart className="w-5 h-5" />
-                      <span>{post.likes}</span>
-                    </button>
-                    <button className="flex items-center space-x-2 text-[#AAAAAA] hover:text-blue-500 transition-colors">
-                      <MessageCircle className="w-5 h-5" />
-                      <span>{post.comments}</span>
-                    </button>
-                    <button className="flex items-center space-x-2 text-[#AAAAAA] hover:text-green-500 transition-colors">
-                      <Share className="w-5 h-5" />
-                      <span>{post.shares}</span>
-                    </button>
-                  </div>
-                </div>
-              ))}
-            </div>
+              <Feed username="rolex" />
           )}
 
           {activeTab === 'photos' && (

@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Heart, MessageCircle, Share, MoreHorizontal } from 'lucide-react';
 import { format } from 'timeago.js';
 import axios from 'axios';
-import john from "/public/assets/john.png"
+import { Link } from "react-router-dom";
 
 
 const Post = ({ post }) => {
@@ -18,12 +18,7 @@ const Post = ({ post }) => {
     const fetchUser = async () => {
       try {
         const res = await axios.get(`http://localhost:8800/api/users/${post.userId}`);
-        // const res = await axios.get(`/users/id=${post.userId}`);
-        // const res = await axios.get(`http://localhost:8800/api/users/id`);
-
-        
-        console.log(res.data)
-
+        // console.log(res.data)
         setUser(res.data);
       } catch (err) {
         console.error(err);
@@ -65,16 +60,18 @@ const Post = ({ post }) => {
       {/* Header */}
       <div className="flex items-start justify-between p-4">
         <div className="flex items-center space-x-3">
-          <img
-            src={
-              user.profilePicture
+          <Link to ={`/profile/${user.username}`}>
+            <img
+              src={
+                user.profilePicture
                 ? PF + user.profilePicture
                 : '/assets/defaultpfp.png' // Direct path to public folder
-            }
-            alt=""
-            className="w-12 h-12 rounded-full object-cover"
-            onError={handleImageError} // Fallback for broken images
-          />
+              }
+              alt=""
+              className="w-12 h-12 rounded-full object-cover"
+              onError={handleImageError} // Fallback for broken images
+              />
+            </Link>
           <div>
             <h3 className="font-semibold text-white">{user?.username }</h3>
             <p className="text-gray-400 text-sm">@{user?.username || "user"} · {format(post.createdAt)}</p>

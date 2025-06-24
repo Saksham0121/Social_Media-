@@ -52,7 +52,7 @@ router.get("/", async (req,res) => {
 
   try{
     const user = userId 
-      ? await User.findById(req.params.id) 
+      ? await User.findById(userId) 
       : await User.findOne({username:username});
     const {password,updatedAt, ...other} = user._doc
     res.status(200).json(other);

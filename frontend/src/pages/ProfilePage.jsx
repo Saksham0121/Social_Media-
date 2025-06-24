@@ -1,20 +1,22 @@
 import React, { useEffect, useState } from 'react';
-import { Home, MessageCircle, Video, Users, Bookmark, Hash, Briefcase, Calendar, GraduationCap, Camera, Edit3, MapPin, Heart, Share, MoreHorizontal, UserPlus, Settings } from 'lucide-react';
+import { Camera, Edit3, Settings } from 'lucide-react';
 import Sidebar from '../components/Sidebar';
 import Navbar from '../components/navbar';
 import Feed from '../components/Feed';
 import axios from 'axios';
+import { useParams } from 'react-router';
 
 const ProfilePage = () => {
   const [activeTab, setActiveTab] = useState('posts');
   const [user, setUser] = useState({});
   const [isFollowing, setIsFollowing] = useState(false);
-
+  const PF = import.meta.env.VITE_PUBLIC_FOLDER;
+  const username = useParams().username;
   
     useEffect(() => {
       const fetchUser = async () => {
         try {
-          const res = await axios.get(`http://localhost:8800/api/users?username=rolex`);
+          const res = await axios.get(`http://localhost:8800/api/users?username=${username}`);
           console.log(res.data)
           setUser(res.data);
         } catch (err) {
@@ -22,7 +24,7 @@ const ProfilePage = () => {
         }
       };
       fetchUser();
-    }, []);
+    }, [username]);
 
   const photos = [
     "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=300&h=300&fit=crop",
@@ -50,64 +52,87 @@ const ProfilePage = () => {
       {/* Main Content */}
       <div className="ml-80 pt-16">
         {/* Cover Photo Section */}
-        <div className="relative h-80 bg-gradient-to-r from-blue-600 via-purple-600 to-teal-600">
+        {/* Cover Photo Section */}
+        <div className="relative h-48 sm:h-64 md:h-72 lg:h-80 bg-gradient-to-r from-blue-600 via-purple-600 to-teal-600">
           <img 
-            src="https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=1200&h=320&fit=crop"
+            src={user.coverPicture
+                ? PF + user.coverPicture
+                : '/assets/Nocover.jpeg'}
             alt="Cover"
             className="w-full h-full object-cover"
           />
-          <div className="absolute inset-0 bg-black/20"></div>
-          <button className="absolute bottom-4 right-4 bg-black/50 hover:bg-black/70 px-4 py-2 rounded-lg flex items-center space-x-2 transition-colors">
+          <div className="absolute inset-0 bg-black/30"></div>
+          <button className="absolute bottom-4 right-4 bg-black/60 hover:bg-black/80 px-4 py-2 rounded-xl flex items-center space-x-2 transition-all duration-300 backdrop-blur-sm border border-white/20">
             <Camera className="w-4 h-4" />
-            <span>Change Cover</span>
+            <span className="hidden sm:inline font-medium">Change Cover</span>
           </button>
         </div>
 
         {/* Profile Info Section */}
-        <div className="relative px-8 pb-6">
-          {/* Profile Picture */}
-          <div className="absolute -top-20 left-8">
-            <div className="relative">
-              <div className="w-40 h-40 rounded-full bg-gradient-to-br from-blue-500 to-teal-500 p-1">
-                <div className="w-full h-full rounded-full bg-[#0A0A0A] flex items-center justify-center text-4xl font-bold">
-                  Zen
+          <div className="relative px-8 pb-6">
+            {/* Profile Picture */}
+            <div className="flex flex-col sm:flex-row items-start sm:items-end gap-6 pt-6">
+              {/* Profile Picture */}
+              <div className="relative -mt-16 sm:-mt-20 lg:-mt-24">
+                <div className="relative">
+                  <div className="w-32 h-32 sm:w-36 sm:h-36 lg:w-44 lg:h-44 rounded-full bg-gradient-to-br from-blue-500 via-purple-500 to-teal-500 p-1.5 shadow-2xl">
+                    <img
+                      src={
+                        user.profilePicture
+                        ? PF + user.profilePicture
+                        : '/assets/defaultpfp.png'
+                      }   
+                      className='w-full h-full rounded-full object-cover'
+                      alt="Profile"
+                    />
+                  </div>
+                  <button className="absolute bottom-2 right-2 bg-[#1DCD9F] hover:bg-[#1DCD9F]/80 p-2.5 rounded-full transition-all duration-300 shadow-lg hover:scale-110">
+                    <Camera className="w-4 h-4 text-black" />
+                  </button>
                 </div>
               </div>
-              <button className="absolute bottom-2 right-2 bg-[#1DCD9F] hover:bg-[#1DCD9F]/80 p-2 rounded-full transition-colors">
-                <Camera className="w-4 h-4 text-black" />
-              </button>
+
+              {/* Profile Info */}
+              <div className="flex-1 min-w-0 sm:pb-4">
+                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+                  <div className="min-w-0 ml-10 flex-1">
+                    <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold bg-gradient-to-r from-white to-gray-300 bg-clip-text text-transparent">
+                      {user.username}
+                    </h1>
+                    <p className="text-gray-300 text-lg sm:text-xl mt-2 leading-relaxed">
+                      {user.desc}
+                    </p>
+                  </div>
+
+                  {/* Action Buttons */}
+                  <div className="flex items-center gap-3 sm:flex-shrink-0">
+                    <button className="bg-[#1DCD9F] hover:bg-[#1DCD9F]/90 text-black px-6 py-3 rounded-xl flex items-center space-x-2 transition-all duration-300 font-semibold shadow-lg hover:scale-105">
+                      <Edit3 className="w-4 h-4" />
+                      <span>Edit Profile</span>
+                    </button>
+                    <button className="bg-[#222222] hover:bg-[#333333] px-4 py-3 rounded-xl transition-all duration-300 shadow-lg hover:scale-105">
+                      <Settings className="w-5 h-5" />
+                    </button>
+                  </div>
+                </div>
+              </div>
             </div>
-          </div>
-
-          {/* Profile Actions */}
-          <div className="flex justify-end pt-4 space-x-3">
-            <button className="bg-[#222222] hover:bg-[#333333] px-4 py-2 rounded-lg flex items-center space-x-2 transition-colors">
-              <Edit3 className="w-4 h-4" />
-              <span>Edit Profile</span>
-            </button>
-            <button className="bg-[#222222] hover:bg-[#333333] px-4 py-2 rounded-lg transition-colors">
-              <Settings className="w-4 h-4" />
-            </button>
-          </div>
-
           {/* Profile Details */}
-          <div className="mt-16 ml-44">
-            <h1 className="text-3xl font-bold">{user.username}</h1>
-            <p className="text-[#ffffff] text-lg">{user.desc}</p>
+          <div className="mt-6 ml-52">
           
             {/* Follow Stats */}
             <div className="flex items-center space-x-8 mt-6">
               <div className="text-center">
-                <div className="text-2xl font-bold">1,247</div>
-                <div className="text-[#AAAAAA] text-sm">Posts</div>
+                <div className="text-2xl font-bold">{user.from}</div>
+                <div className="text-[#AAAAAA] text-sm">from</div>
               </div>
               <div className="text-center cursor-pointer hover:text-[#1DCD9F] transition-colors">
-                <div className="text-2xl font-bold">12.5K</div>
-                <div className="text-[#AAAAAA] text-sm">Followers</div>
+                <div className="text-2xl font-bold">{user.city}</div>
+                <div className="text-[#AAAAAA] text-sm">City</div>
               </div>
               <div className="text-center cursor-pointer hover:text-[#1DCD9F] transition-colors">
-                <div className="text-2xl font-bold">1,891</div>
-                <div className="text-[#AAAAAA] text-sm">Following</div>
+                <div className="text-2xl font-bold">{user.relationship === 1 ? "Single" : user.relationship === 2 ? "Married" : "-" }</div>
+                <div className="text-[#AAAAAA] text-sm">Relationship</div>
               </div>
               <div className="text-center cursor-pointer hover:text-[#1DCD9F] transition-colors">
                 <div className="text-2xl font-bold">432</div>
@@ -139,7 +164,7 @@ const ProfilePage = () => {
         {/* Tab Content */}
         <div className="px-8 py-6">
           {activeTab === 'posts' && (
-              <Feed username="rolex" />
+              <Feed username={username} />
           )}
 
           {activeTab === 'photos' && (
@@ -195,3 +220,6 @@ const ProfilePage = () => {
 };
 
 export default ProfilePage;
+
+
+//new

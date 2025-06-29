@@ -1,10 +1,13 @@
-import { useState } from 'react';
+import { useContext, useState } from 'react';
 import { Link } from "react-router-dom";
 import { Search, Home, User, MessageCircle, Bell } from 'lucide-react';
+import { AuthContext } from '../context/AuthContext';
 
 export default function Navbar() {
   const [searchQuery, setSearchQuery] = useState('');
   const [isSearchFocused, setIsSearchFocused] = useState(false);
+  const { user } = useContext(AuthContext);
+  const PF =  import.meta.env.VITE_PUBLIC_FOLDER;
 
   const notifications = {
     messages: 3,
@@ -58,11 +61,6 @@ export default function Navbar() {
             <Home className="w-5 h-5" />
           </Link>
 
-          <Link to="/profile">
-            <button className="p-2 text-[#1DCD9F] hover:text-white hover:bg-[#222222] rounded-lg transition-all duration-200">
-              <User className="w-5 h-5" />
-            </button>
-          </Link>
 
           {/* Messages */}
           <button className="relative p-2 text-[#1DCD9F] hover:text-white hover:bg-[#222222] rounded-lg transition-all duration-200 group">
@@ -86,9 +84,13 @@ export default function Navbar() {
 
           {/* User Avatar */}
           <div className="ml-3">
-            <button className="w-8 h-8 rounded-full flex items-center justify-center bg-[#222222] hover:shadow-lg hover:shadow-[#1DCD9F]/25 transition-all duration-200 transform hover:scale-110 overflow-hidden relative">
-              <img src="/src/assets/ZenitsuDS.jpg" alt="icon" className="w-full h-full object-cover absolute inset-0" />
-            </button>
+            <Link to={`/profile/${user.username}`} className="w-8 h-8 rounded-full flex items-center justify-center bg-[#222222] hover:shadow-lg hover:shadow-[#1DCD9F]/25 transition-all duration-200 transform hover:scale-110 overflow-hidden relative">
+              <img src={
+                user.profilePicture
+                ? PF + user.profilePicture
+                : '/assets/defaultpfp.png' // Direct path to public folder
+              }alt="icon" className="w-full h-full object-cover absolute inset-0" />
+            </Link>
           </div>
         </div>
       </div>

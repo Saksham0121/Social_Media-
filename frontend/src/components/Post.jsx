@@ -1,8 +1,9 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { Heart, MessageCircle, Share, MoreHorizontal } from 'lucide-react';
 import { format } from 'timeago.js';
 import axios from 'axios';
 import { Link } from "react-router-dom";
+import { AuthContext } from '../context/AuthContext';
 
 
 const Post = ({ post }) => {
@@ -13,6 +14,11 @@ const Post = ({ post }) => {
   const [isLiked, setIsLiked] = useState(false);
   const [showComments, setShowComments] = useState(false);
   const PF = import.meta.env.VITE_PUBLIC_FOLDER;
+  const {user : currentUser} = useContext(AuthContext)
+  
+  useEffect(()=>{
+    setIsLiked(post.likes.includes(currentUser._id))
+  }, [currentUser, post.likes])
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -29,7 +35,7 @@ const Post = ({ post }) => {
 
   const likeHandler = async () => {
     try {
-      await axios.put(`/posts/${post._id}/like`, { userId: post.userId });
+      await axios.put(`/posts/${post._id}/like`, { userId: currentUser._id });
     } catch (err) {
       console.error(err);
     }
@@ -52,7 +58,7 @@ const Post = ({ post }) => {
 
   // Handle image error by setting a fallback
   const handleImageError = (e) => {
-    e.target.src = '/assets/default-avatar.jpg'; // Path to default image in public folder
+    e.target.src = '/assets/defaultpfp.png'; // Path to default image in public folder
   };
 
   return (

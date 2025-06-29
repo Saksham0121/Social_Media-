@@ -1,76 +1,44 @@
-import React, { useState } from 'react';
+import React, { useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Eye, EyeOff, User, Mail, Lock, ArrowRight, Users } from 'lucide-react';
+import axios from "axios";
+import { useNavigate } from 'react-router-dom';
 
-const SignupPage = () => {
+export default function Signup() {
+  const username = useRef();
+  const email = useRef();
+  const password = useRef();
+  const passwordAgain = useRef();
+  const history = useNavigate();
+  
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-  const [formData, setFormData] = useState({
-    username: '',
-    email: '',
-    password: '',
-    confirmPassword: ''
-  });
   const [errors, setErrors] = useState({});
 
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setFormData(prev => ({
-      ...prev,
-      [name]: value
-    }));
-    // Clear error when user starts typing
-    if (errors[name]) {
-      setErrors(prev => ({
-        ...prev,
-        [name]: ''
-      }));
+  const handleClick = async (e) => {
+    e.preventDefault();
+    // setErrors({}); 
+    if(passwordAgain.current.value !== password.current.value){
+      passwordAgain.current.setCustomValidity("Passwords don't match")
     }
-  };
+    else{
+      const user = {
+        username : username.current.value,
+        email: email.current.value,
+        password: password.current.value,
+      }
+      try{
+        await axios.post("/auth/register", user);
+        history.push("/login")
 
-  const validateForm = () => {
-    const newErrors = {};
 
-    if (!formData.username.trim()) {
-      newErrors.username = 'Username is required';
-    } else if (formData.username.length < 3) {
-      newErrors.username = 'Username must be at least 3 characters';
+      }catch(err){
+        console.log(err);
+      }
     }
 
-    if (!formData.email.trim()) {
-      newErrors.email = 'Email is required';
-    } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
-      newErrors.email = 'Email is invalid';
-    }
 
-    if (!formData.password) {
-      newErrors.password = 'Password is required';
-    } else if (formData.password.length < 6) {
-      newErrors.password = 'Password must be at least 6 characters';
-    }
-
-    if (!formData.confirmPassword) {
-      newErrors.confirmPassword = 'Please confirm your password';
-    } else if (formData.password !== formData.confirmPassword) {
-      newErrors.confirmPassword = 'Passwords do not match';
-    }
-
-    setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
-  };
-
-  const handleSubmit = () => {
-    if (validateForm()) {
-      console.log('Register:', {
-        username: formData.username,
-        email: formData.email,
-        password: formData.password
-      });
-      alert('Registration successful! (Check console for form data)');
-    }
-  };
-
-
+  }
   return (
     <div className="min-h-screen bg-black flex items-center justify-center p-4 relative overflow-hidden">
       {/* Animated Neon Lines Background */}
@@ -165,7 +133,7 @@ const SignupPage = () => {
         ></div>
       </div>
 
-      {/* Custom Animations */}
+      {/* Custom Animations CSS */}
       <style jsx>{`
         @keyframes slideRight {
           0% { transform: translateX(-100%); }
@@ -182,6 +150,7 @@ const SignupPage = () => {
           100% { opacity: 0.3; box-shadow: 0 0 20px currentColor, 0 0 30px currentColor; }
         }
       `}</style>
+
       <div className="w-full max-w-md">
         {/* Header */}
         <div className="text-center mb-8">
@@ -191,16 +160,21 @@ const SignupPage = () => {
             </div>
           </div>
           <h1 className="text-3xl font-bold text-white mb-2">
-            Join Us
+            Join ConnectNow
           </h1>
           <p style={{color: '#1DCD9F'}} className="text-sm">
-            Create your account to get started
+            Connect with friends and the world around you on ConnectNow
           </p>
         </div>
 
         {/* Form Card */}
         <div className="rounded-2xl p-8 shadow-2xl" style={{backgroundColor: '#222222'}}>
-          <div className="space-y-6">
+          <form onSubmit={handleClick} className="space-y-6">
+            {/* Server Error */}
+            {errors.server && (
+              <div className="text-red-400 text-sm text-center">{errors.server}</div>
+            )}
+
             {/* Username field */}
             <div className="space-y-2">
               <label className="text-white text-sm font-medium">Username</label>
@@ -208,17 +182,12 @@ const SignupPage = () => {
                 <User className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5" style={{color: '#1DCD9F'}} />
                 <input
                   type="text"
-                  name="username"
-                  value={formData.username}
-                  onChange={handleInputChange}
-                  className="w-full pl-12 pr-4 py-3 bg-black text-white rounded-lg border border-gray-700 focus:outline-none focus:ring-2 transition-all"
-                  style={{'--tw-ring-color': '#1DCD9F'}}
+                  ref={username}
+                  required
+                  className="w-full pl-12 pr-4 py-3 bg-black text-white rounded-lg border border-gray-700 focus:outline-none focus:ring-2 focus:ring-green-400 transition-all"
                   placeholder="Enter your username"
                 />
               </div>
-              {errors.username && (
-                <p className="text-red-400 text-xs">{errors.username}</p>
-              )}
             </div>
 
             {/* Email field */}
@@ -228,17 +197,12 @@ const SignupPage = () => {
                 <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5" style={{color: '#1DCD9F'}} />
                 <input
                   type="email"
-                  name="email"
-                  value={formData.email}
-                  onChange={handleInputChange}
-                  className="w-full pl-12 pr-4 py-3 bg-black text-white rounded-lg border border-gray-700 focus:outline-none focus:ring-2 transition-all"
-                  style={{'--tw-ring-color': '#1DCD9F'}}
+                  ref={email}
+                  required
+                  className="w-full pl-12 pr-4 py-3 bg-black text-white rounded-lg border border-gray-700 focus:outline-none focus:ring-2 focus:ring-green-400 transition-all"
                   placeholder="Enter your email"
                 />
               </div>
-              {errors.email && (
-                <p className="text-red-400 text-xs">{errors.email}</p>
-              )}
             </div>
 
             {/* Password field */}
@@ -248,11 +212,10 @@ const SignupPage = () => {
                 <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5" style={{color: '#1DCD9F'}} />
                 <input
                   type={showPassword ? "text" : "password"}
-                  name="password"
-                  value={formData.password}
-                  onChange={handleInputChange}
-                  className="w-full pl-12 pr-12 py-3 bg-black text-white rounded-lg border border-gray-700 focus:outline-none focus:ring-2 transition-all"
-                  style={{'--tw-ring-color': '#1DCD9F'}}
+                  ref={password}
+                  required
+                  minLength="6"
+                  className="w-full pl-12 pr-12 py-3 bg-black text-white rounded-lg border border-gray-700 focus:outline-none focus:ring-2 focus:ring-green-400 transition-all"
                   placeholder="Enter your password"
                 />
                 <button
@@ -263,9 +226,6 @@ const SignupPage = () => {
                   {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
                 </button>
               </div>
-              {errors.password && (
-                <p className="text-red-400 text-xs">{errors.password}</p>
-              )}
             </div>
 
             {/* Confirm Password field */}
@@ -275,11 +235,9 @@ const SignupPage = () => {
                 <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5" style={{color: '#1DCD9F'}} />
                 <input
                   type={showConfirmPassword ? "text" : "password"}
-                  name="confirmPassword"
-                  value={formData.confirmPassword}
-                  onChange={handleInputChange}
-                  className="w-full pl-12 pr-12 py-3 bg-black text-white rounded-lg border border-gray-700 focus:outline-none focus:ring-2 transition-all"
-                  style={{'--tw-ring-color': '#1DCD9F'}}
+                  ref={passwordAgain}
+                  required
+                  className="w-full pl-12 pr-12 py-3 bg-black text-white rounded-lg border border-gray-700 focus:outline-none focus:ring-2 focus:ring-green-400 transition-all"
                   placeholder="Confirm your password"
                 />
                 <button
@@ -296,32 +254,31 @@ const SignupPage = () => {
             </div>
 
             {/* Submit Button */}
-            <Link to = "/homepage"
-              onClick={handleSubmit}
-              className="w-full py-3 px-4 rounded-lg font-semibold text-black transition-all duration-200 flex items-center justify-center space-x-2 hover:opacity-90 transform hover:scale-[1.02] cursor-pointer"
+            <button
+              type="submit"
+              className="w-full py-3 px-4 rounded-lg font-semibold text-black transition-all duration-200 flex items-center justify-center space-x-2 hover:opacity-90 transform hover:scale-[1.02]"
               style={{backgroundColor: '#1DCD9F'}}
             >
-              <span>Create Account</span>
+              <span>Sign Up</span>
               <ArrowRight className="w-5 h-5" />
-            </Link>
-          </div>
+            </button>
+          </form>
         </div>
 
         {/* Sign In Option */}
         <div className="text-center mt-6">
           <p className="text-gray-400 text-sm">
             Already have an account?
-            <Link to = '/'
+            <Link 
+              to="/login"
               className="ml-2 font-semibold transition-colors hover:opacity-80"
               style={{color: '#169976'}}
             >
-              Sign in
+              Log into Account
             </Link>
           </p>
         </div>
       </div>
     </div>
   );
-};
-
-export default SignupPage;
+}

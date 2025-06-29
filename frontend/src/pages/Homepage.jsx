@@ -1,8 +1,8 @@
 import React from 'react';
 import Sidebar from '../components/Sidebar';
-import Feed from '../components/feed';
 import Rightbar from '../components/Rightbar';
 import Navbar from '../components/navbar';
+import Feed from '../components/Feed';
 
 const Homepage = () => {
   return (

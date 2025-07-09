@@ -87,9 +87,10 @@ export default function Navbar() {
             <Link to={`/profile/${user.username}`} className="w-8 h-8 rounded-full flex items-center justify-center bg-[#222222] hover:shadow-lg hover:shadow-[#1DCD9F]/25 transition-all duration-200 transform hover:scale-110 overflow-hidden relative">
               <img src={
                 user.profilePicture
-                ? PF + user.profilePicture
-                : '/assets/defaultpfp.png' // Direct path to public folder
-              }alt="icon" className="w-full h-full object-cover absolute inset-0" />
+                  ? PF + user.profilePicture
+                  : PF + "defaultpfp.png"
+              }
+              alt="icon" className="w-full h-full object-cover absolute inset-0" />
             </Link>
           </div>
         </div>

@@ -22,8 +22,8 @@ const Feed = ( {username}  ) => {
   }, [username, user._id]);
 
   return (
-    <div className="flex-1 ml-80 mr-80 pt-20 px-4 " style={{backgroundColor: '#000000' }}>
-      <div className="max-w-2xl mx-auto">
+    <div className="flex-1 ml-80 mr-80 pt-20 px-4 ">
+      <div className="max-w-2xl mx-auto" style={{backgroundColor: '#000000' }}>
         {/* Share Component */}
         <Share />
         

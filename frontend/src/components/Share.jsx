@@ -1,117 +1,118 @@
-import React, { useState } from 'react';
-import { Image, Video, Tag, MapPin, Smile, User } from 'lucide-react';
+import React, { useContext, useRef, useState } from 'react';
+import { Image, Tag, MapPin, Smile, X } from 'lucide-react';
+import { AuthContext } from '../context/AuthContext';
+import axios from 'axios';
 
-const Share = () => {
-  const [postText, setPostText] = useState('');
-  const [selectedImage, setSelectedImage] = useState(null);
+export default function Share() {
+  const { user } = useContext(AuthContext);
+  const PF = import.meta.env.VITE_PUBLIC_FOLDER;
+  const desc = useRef();
+  const [file, setFile] = useState(null);
 
-  const handleImageUpload = (e) => {
-    const file = e.target.files[0];
+  const submitHandler = async (e) => {
+    e.preventDefault();
+    const newPost = {
+      userId: user._id,
+      desc: desc.current.value,
+    };
+
     if (file) {
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        setSelectedImage(e.target.result);
-      };
-      reader.readAsDataURL(file);
+      const data = new FormData();
+      const fileName = Date.now() + file.name;
+      data.append("file", file);
+      data.append("name", fileName);
+      newPost.img = fileName;
+      try {
+        await axios.post("/upload", data);
+      } catch (err) {
+        console.error(err);
+      }
     }
-  };
 
-  const handlePost = () => {
-    if (postText.trim()) {
-      console.log('Posting:', postText);
-      setPostText('');
-      setSelectedImage(null);
+    try {
+      await axios.post("/posts", newPost);
+      // window.location.reload();
+    } catch (err) {
+      console.error(err);
     }
-  };
-
-  const removeImage = () => {
-    setSelectedImage(null);
   };
 
   return (
     <div className="bg-[#111111] rounded-lg shadow-sm border border-[#222222] p-4 mb-6">
-      {/* User Input Section */}
-      <div className="flex space-x-4">
-        <div className="w-12 h-12 bg-gradient-to-r from-[#1DCD9F] to-[#169976] rounded-full flex items-center justify-center">
-          <User className="w-6 h-6 text-white" />
-        </div>
-        <div className="flex-1">
-          <textarea
-            value={postText}
-            onChange={(e) => setPostText(e.target.value)}
-            placeholder="What's in your mind, Zenitsu?"
-            className="w-full p-3 text-base border border-[#222222] bg-[#000000] text-white rounded-lg resize-none focus:outline-none focus:ring-2 focus:ring-[#1DCD9F] focus:border-transparent"
-            rows="3"
+      <form onSubmit={submitHandler}>
+        <div className="flex space-x-4 mb-4">
+          <img
+            className="w-12 h-12 rounded-full object-cover"
+            src={
+              user.profilePicture
+                ? PF + user.profilePicture
+                : PF + "defaultpfp.png"
+            }
+            alt=""
           />
+          <input
+            placeholder={`What's in your mind ${user.username}?`}
+            className="flex-1 p-3 text-base border border-[#222222] bg-[#000000] text-white rounded-lg resize-none focus:outline-none focus:ring-2 focus:ring-[#1DCD9F]"
+            ref={desc}
+          />
+        </div>
 
-          {/* Image Preview */}
-          {selectedImage && (
-            <div className="mt-3 relative">
-              <img
-                src={selectedImage}
-                alt="Selected"
-                className="w-full h-48 object-cover rounded-lg"
-              />
-              <button
-                onClick={removeImage}
-                className="absolute top-2 right-2 bg-[#000000] bg-opacity-60 text-white rounded-full px-2 hover:bg-opacity-80"
-              >
-                ×
-              </button>
-            </div>
-          )}
-
-          {/* Action Buttons */}
-          <div className="flex justify-between items-center mt-4 flex-wrap gap-2">
-            <div className="flex flex-wrap gap-2">
-              {/* Photo/Video Button */}
-              <label className="flex items-center space-x-2 px-3 py-2 bg-[#1DCD9F]/10 text-[#1DCD9F] rounded-lg cursor-pointer hover:bg-[#1DCD9F]/20 transition-colors">
-                <Image className="w-4 h-4" />
-                <span className="text-sm font-medium">Photo/Video</span>
-                <input
-                  type="file"
-                  accept="image/*,video/*"
-                  onChange={handleImageUpload}
-                  className="hidden"
-                />
-              </label>
-
-              {/* Tag Button */}
-              <button className="flex items-center space-x-2 px-3 py-2 bg-[#169976]/10 text-[#169976] rounded-lg hover:bg-[#169976]/20 transition-colors">
-                <Tag className="w-4 h-4" />
-                <span className="text-sm font-medium">Tag</span>
-              </button>
-
-              {/* Location Button */}
-              <button className="flex items-center space-x-2 px-3 py-2 bg-[#169976]/10 text-[#169976] rounded-lg hover:bg-[#169976]/20 transition-colors">
-                <MapPin className="w-4 h-4" />
-                <span className="text-sm font-medium">Location</span>
-              </button>
-
-              {/* Feelings Button */}
-              <button className="flex items-center space-x-2 px-3 py-2 bg-yellow-100/10 text-yellow-400 rounded-lg hover:bg-yellow-100/20 transition-colors">
-                <Smile className="w-4 h-4" />
-                <span className="text-sm font-medium">Feelings</span>
-              </button>
-            </div>
-
-            {/* Share Button */}
+        {file && (
+          <div className="relative mb-4">
+            <img
+              className="w-full h-48 object-cover rounded-lg"
+              src={URL.createObjectURL(file)}
+              alt=""
+            />
             <button
-              onClick={handlePost}
-              className={`px-6 py-2 rounded-lg font-medium transition-colors mt-2 sm:mt-0 ${
-                postText.trim()
-                  ? 'bg-[#1DCD9F] text-white hover:bg-[#169976]'
-                  : 'bg-[#222222] text-[#555] cursor-not-allowed'
-              }`}
-              disabled={!postText.trim()}
+              type="button"
+              onClick={() => setFile(null)}
+              className="absolute top-2 right-2 bg-[#000000] bg-opacity-60 text-white rounded-full p-1 hover:bg-opacity-80"
             >
-              Share
+              <X className="w-4 h-4" />
             </button>
           </div>
+        )}
+
+        <hr className="border-[#222222] mb-4" />
+
+        <div className="flex justify-between items-center flex-wrap gap-2">
+          <div className="flex flex-wrap gap-2">
+            <label className="flex items-center space-x-2 px-3 py-2 bg-red-500/10 text-red-500 rounded-lg cursor-pointer hover:bg-red-500/20 transition-colors">
+              <Image className="w-4 h-4" />
+              <span className="text-sm font-medium">Photo or Video</span>
+              <input
+                style={{ display: "none" }}
+                type="file"
+                accept=".png,.jpeg,.jpg"
+                onChange={(e) => setFile(e.target.files[0])}
+              />
+            </label>
+
+            <div className="flex items-center space-x-2 px-3 py-2 bg-blue-500/10 text-blue-500 rounded-lg hover:bg-blue-500/20 transition-colors cursor-pointer">
+              <Tag className="w-4 h-4" />
+              <span className="text-sm font-medium">Tag</span>
+            </div>
+
+            <div className="flex items-center space-x-2 px-3 py-2 bg-green-500/10 text-green-500 rounded-lg hover:bg-green-500/20 transition-colors cursor-pointer">
+              <MapPin className="w-4 h-4" />
+              <span className="text-sm font-medium">Location</span>
+            </div>
+
+            <div className="flex items-center space-x-2 px-3 py-2 bg-yellow-100/10 text-yellow-400 rounded-lg hover:bg-yellow-100/20 transition-colors cursor-pointer">
+              <Smile className="w-4 h-4" />
+              <span className="text-sm font-medium">Feelings</span>
+            </div>
+          </div>
+
+          <button
+            type="submit"
+            className="px-6 py-2 bg-[#1DCD9F] text-white rounded-lg font-medium hover:bg-[#169976] transition-colors mt-2 sm:mt-0"
+          >
+            Share
+          </button>
         </div>
-      </div>
+      </form>
     </div>
   );
-};
-
-export default Share;
+}

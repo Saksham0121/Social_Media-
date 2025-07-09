@@ -57,7 +57,7 @@ const ProfilePage = () => {
           <img 
             src={user.coverPicture
                 ? PF + user.coverPicture
-                : '/assets/Nocover.jpeg'}
+                : PF + 'Nocover.jpeg'}
             alt="Cover"
             className="w-full h-full object-cover"
           />
@@ -78,10 +78,10 @@ const ProfilePage = () => {
                   <div className="w-32 h-32 sm:w-36 sm:h-36 lg:w-44 lg:h-44 rounded-full bg-gradient-to-br from-blue-500 via-purple-500 to-teal-500 p-1.5 shadow-2xl">
                     <img
                       src={
-                        user.profilePicture
-                        ? PF + user.profilePicture
-                        : '/assets/defaultpfp.png'
-                      }   
+                          user.profilePicture
+                          ? PF + user.profilePicture
+                          : PF + "defaultpfp.png"
+                      }
                       className='w-full h-full rounded-full object-cover'
                       alt="Profile"
                     />

@@ -35,7 +35,7 @@ const Post = ({ post }) => {
 
   const likeHandler = async () => {
     try {
-      await axios.put(`/posts/${post._id}/like`, { userId: currentUser._id });
+      await axios.put(`http://localhost:8800/api/posts/${post._id}/like`, {userId: currentUser._id});
     } catch (err) {
       console.error(err);
     }
@@ -70,8 +70,8 @@ const Post = ({ post }) => {
             <img
               src={
                 user.profilePicture
-                ? PF + user.profilePicture
-                : '/assets/defaultpfp.png' // Direct path to public folder
+                  ? PF + user.profilePicture
+                  : PF + "defaultpfp.png"
               }
               alt=""
               className="w-12 h-12 rounded-full object-cover"
@@ -94,7 +94,7 @@ const Post = ({ post }) => {
         <p className="text-gray-200 text-base leading-relaxed mb-3">{post.desc}</p>
         {post.img && (
           <div className="rounded-lg overflow-hidden">
-            <img src={`/assets/${post.img}`} alt="Post" className="w-full h-64 object-cover" />
+            <img src={`${PF}${post.img}`} alt="Post" className="w-full h-64 object-cover" />
           </div>
         )}
       </div>

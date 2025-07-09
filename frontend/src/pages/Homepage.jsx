@@ -6,12 +6,12 @@ import Feed from '../components/Feed';
 
 const Homepage = () => {
   return (
-    <div className="homepage">
-      <div className="homepage-container" style={{ backgroundColor: '#000000' }}>
-        <Navbar />
+    <div className="min-h-screen bg-black text-white">
+      <Navbar />
+      <div className="flex">
         <Sidebar />
         <Feed />
-        <Rightbar/>
+        <Rightbar />
       </div>
     </div>
   );

@@ -9,32 +9,27 @@ export default function Share() {
   const desc = useRef();
   const [file, setFile] = useState(null);
 
-  const submitHandler = async (e) => {
+ const submitHandler = async (e) => {
     e.preventDefault();
     const newPost = {
       userId: user._id,
       desc: desc.current.value,
     };
-
     if (file) {
       const data = new FormData();
       const fileName = Date.now() + file.name;
-      data.append("file", file);
       data.append("name", fileName);
+      data.append("file", file);
       newPost.img = fileName;
+      console.log(newPost);
       try {
-        await axios.post("/upload", data);
-      } catch (err) {
-        console.error(err);
-      }
+        await axios.post("http://localhost:8800/api/upload", data);
+      } catch (err) {}
     }
-
     try {
-      await axios.post("/posts", newPost);
-      // window.location.reload();
-    } catch (err) {
-      console.error(err);
-    }
+      await axios.post("http://localhost:8800/api/posts", newPost);
+      window.location.reload();
+    } catch (err) {}
   };
 
   return (

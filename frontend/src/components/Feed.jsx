@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useState } from 'react';
 import Post from './Post';
-import Share from './share';
+import Share from './Share';
 import axios from "axios";
 import { AuthContext } from '../context/AuthContext';
 
@@ -12,11 +12,13 @@ const Feed = ( {username}  ) => {
   const fetchPosts = async () => {
     const res = username 
     ? await axios.get("http://localhost:8800/api/posts/profile/" + username)
-    // : await axios.get("http://localhost:8800/api/posts/timeline/" + user._id);
-    : await axios.get("http://localhost:8800/api/posts/timeline/6841e6aef2f88ba78c58fb89");
+    : await axios.get("http://localhost:8800/api/posts/timeline/" + user._id);
 
     // console.log(res.data); //shi h
-    setPosts(res.data);
+    setPosts(res.data.sort((p1, p2) => {
+      return new Date(p2.createdAt) - new Date(p1.createdAt);
+    }
+    ));
   };
   fetchPosts();
   }, [username, user._id]);

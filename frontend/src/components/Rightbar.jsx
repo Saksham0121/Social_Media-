@@ -61,55 +61,6 @@ const Rightbar = () => {
     },
   ]
 
-  const suggestedUsers = [
-    {
-      name: "Kyojuro Rengoku",
-      handle: "flamehashira",
-      avatar: "/src/assets/DSlogo.jpg",
-      rank: "Flame Hashira",
-      mutualFriends: 12,
-    },
-    {
-      name: "Shinobu Kocho",
-      handle: "insectpillar",
-      avatar: "/src/assets/DSlogo.jpg",
-      rank: "Insect Hashira",
-      mutualFriends: 8,
-    },
-    {
-      name: "Tengen Uzui",
-      handle: "soundhashira",
-      avatar: "/src/assets/DSlogo.jpg",
-      rank: "Sound Hashira",
-      mutualFriends: 15,
-    },
-  ]
-
-  const upcomingEvents = [
-    {
-      title: "Final Selection",
-      date: "Tomorrow",
-      time: "6:00 PM",
-      attendees: 24,
-      type: "Training",
-    },
-    {
-      title: "Hashira Meeting",
-      date: "Dec 15",
-      time: "2:00 PM",
-      attendees: 9,
-      type: "Meeting",
-    },
-  ]
-
-  const trendingTopics = [
-    { tag: "#DemonSlayerCorps", posts: "45.2K", growth: "+12%" },
-    { tag: "#BreathingTechniques", posts: "32.1K", growth: "+8%" },
-    { tag: "#HashiraTraining", posts: "28.7K", growth: "+15%" },
-    { tag: "#FinalSelection", posts: "19.3K", growth: "+5%" },
-    { tag: "#TotalConcentration", posts: "16.8K", growth: "+22%" },
-  ]
-
   const recentActivity = [
     {
       user: "Mitsuri Kanroji",
@@ -216,38 +167,6 @@ const Rightbar = () => {
         ))}
       </div>
 
-      {/* Upcoming Events */}
-      <div className="bg-[#111111] border border-[#222222] rounded-lg p-4 mb-4">
-        <div className="flex items-center space-x-2 mb-3">
-          <Calendar className="w-5 h-5 text-[#1DCD9F]" />
-          <h3 className="font-semibold">Upcoming Events</h3>
-        </div>
-        <div className="space-y-3">
-          {upcomingEvents.map((event, index) => (
-            <div
-              key={index}
-              className="p-3 bg-[#222222] rounded-lg hover:bg-[#333333] transition-colors cursor-pointer"
-            >
-              <div className="flex items-center justify-between mb-2">
-                <h4 className="font-medium text-white text-sm">{event.title}</h4>
-                <span className="text-xs bg-[#1DCD9F] text-black px-2 py-1 rounded-full">{event.type}</span>
-              </div>
-              <div className="flex items-center justify-between text-xs text-gray-400">
-                <div className="flex items-center space-x-2">
-                  <Clock className="w-3 h-3" />
-                  <span>
-                    {event.date} at {event.time}
-                  </span>
-                </div>
-                <div className="flex items-center space-x-1">
-                  <Users className="w-3 h-3" />
-                  <span>{event.attendees}</span>
-                </div>
-              </div>
-            </div>
-          ))}
-        </div>
-      </div>
 
       {/* Online Friends */}
       <div className="bg-[#111111] border border-[#222222] rounded-lg p-4 mb-4">
@@ -282,74 +201,6 @@ const Rightbar = () => {
         </div>
       </div>
 
-      {/* Suggested Users */}
-      <div className="bg-[#111111] border border-[#222222] rounded-lg p-4 mb-4">
-        <div className="flex items-center space-x-2 mb-4">
-          <UserPlus className="w-5 h-5 text-[#1DCD9F]" />
-          <h3 className="font-semibold">Suggested Corps Members</h3>
-        </div>
-        <div className="space-y-4">
-          {suggestedUsers.map((user, index) => (
-            <div
-              key={index}
-              className="flex items-center justify-between p-2 hover:bg-[#222222] rounded-lg transition-colors"
-            >
-              <div className="flex items-center space-x-3">
-                <img
-                  src={user.avatar || "/placeholder.svg"}
-                  alt={user.name}
-                  className="w-10 h-10 rounded-full object-cover"
-                />
-                <div>
-                  <div className="flex items-center space-x-2">
-                    <p className="text-sm text-white font-medium">{user.name}</p>
-                    {getRankIcon(user.rank)}
-                  </div>
-                  <p className="text-xs text-gray-400">@{user.handle}</p>
-                  <p className="text-xs text-gray-500">{user.mutualFriends} mutual friends</p>
-                </div>
-              </div>
-              <button
-                onClick={() => handleFollow(user.name)}
-                className={`px-3 py-1 rounded-full text-xs font-medium transition-all duration-200 ${
-                  followedUsers.includes(user.name)
-                    ? "bg-[#222222] text-white hover:bg-[#333333] border border-[#333333]"
-                    : "bg-[#1DCD9F] text-black hover:bg-[#169976] hover:scale-105"
-                }`}
-              >
-                {followedUsers.includes(user.name) ? "Following" : "Follow"}
-              </button>
-            </div>
-          ))}
-        </div>
-      </div>
-
-      {/* Trending Topics */}
-      <div className="bg-[#111111] border border-[#222222] rounded-lg p-4 mb-4">
-        <div className="flex items-center space-x-2 mb-4">
-          <TrendingUp className="w-5 h-5 text-[#1DCD9F]" />
-          <h3 className="font-semibold">Trending in Corps</h3>
-        </div>
-        <div className="space-y-3">
-          {trendingTopics.map((trend, index) => (
-            <div key={index} className="cursor-pointer hover:bg-[#222222] p-2 rounded-lg transition-colors group">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-sm text-white font-medium group-hover:text-[#1DCD9F] transition-colors">
-                    {trend.tag}
-                  </p>
-                  <p className="text-xs text-gray-400">{trend.posts} posts</p>
-                </div>
-                <div className="text-right">
-                  <span className="text-xs text-[#1DCD9F] font-medium">{trend.growth}</span>
-                  <TrendingUp className="w-3 h-3 text-[#1DCD9F] ml-1 inline" />
-                </div>
-              </div>
-            </div>
-          ))}
-        </div>
-      </div>
-
       {/* Recent Activity */}
       <div className="bg-[#111111] border border-[#222222] rounded-lg p-4 mb-4">
         <div className="flex items-center space-x-2 mb-4">
@@ -379,31 +230,7 @@ const Rightbar = () => {
         </div>
       </div>
 
-      {/* Quick Stats */}
-      <div className="bg-gradient-to-r from-[#111111] to-[#222222] border border-[#333333] rounded-lg p-4">
-        <h3 className="font-semibold mb-3 flex items-center">
-          <Star className="w-4 h-4 text-[#1DCD9F] mr-2" />
-          Your Corps Stats
-        </h3>
-        <div className="grid grid-cols-2 gap-3 text-center">
-          <div className="bg-[#222222] p-3 rounded-lg">
-            <p className="text-lg font-bold text-[#1DCD9F]">127</p>
-            <p className="text-xs text-gray-400">Demons Slayed</p>
-          </div>
-          <div className="bg-[#222222] p-3 rounded-lg">
-            <p className="text-lg font-bold text-yellow-400">8</p>
-            <p className="text-xs text-gray-400">Rank Level</p>
-          </div>
-          <div className="bg-[#222222] p-3 rounded-lg">
-            <p className="text-lg font-bold text-purple-400">45</p>
-            <p className="text-xs text-gray-400">Training Days</p>
-          </div>
-          <div className="bg-[#222222] p-3 rounded-lg">
-            <p className="text-lg font-bold text-red-400">12</p>
-            <p className="text-xs text-gray-400">Missions</p>
-          </div>
-        </div>
-      </div>
+      
     </div>
   )
 }

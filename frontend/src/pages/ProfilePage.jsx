@@ -38,7 +38,7 @@ const ProfilePage = () => {
         }
       } catch (err) {
         console.log(err);
-      }
+      }  
     };
     getFriends();
   }, [user]);
